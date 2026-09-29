@@ -50,3 +50,4 @@ cache/
 coverage/
 .coverage
 htmlcov/
+repomix-output.xml
