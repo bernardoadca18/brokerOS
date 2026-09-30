@@ -28,9 +28,13 @@ const navigation = [
   { name: 'Settings', href: '/settings', icon: Settings },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  collapsed: boolean
+  onCollapsedChange: (collapsed: boolean) => void
+}
+
+export function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) {
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = React.useState(false)
 
   return (
     <aside
@@ -83,7 +87,7 @@ export function Sidebar() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={() => onCollapsedChange(!collapsed)}
             className={cn('w-full', collapsed ? 'justify-center' : 'justify-end')}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >

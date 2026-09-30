@@ -12,12 +12,13 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false)
 
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar />
+      <Sidebar collapsed={sidebarCollapsed} onCollapsedChange={setSidebarCollapsed} />
       <MobileNav open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
-      <div className="lg:pl-64">
+      <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:pl-16' : 'lg:pl-64'}`}>
         <Header onMenuClick={() => setMobileNavOpen(true)} />
         <main className="p-4 lg:p-6">{children}</main>
       </div>

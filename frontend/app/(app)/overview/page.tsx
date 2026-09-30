@@ -4,6 +4,7 @@ import { ArrowDownRight, ArrowUpRight, TrendingUp, Users, DollarSign, Target } f
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useAuth } from '@/lib/auth-context'
 
 const kpiData = [
   {
@@ -52,11 +53,15 @@ const pendingTasks = [
 ]
 
 export default function OverviewPage() {
+  const { user } = useAuth()
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
-        <p className="text-muted-foreground">Welcome back, John. Here&apos;s your sales summary.</p>
+        <p className="text-muted-foreground">
+          Welcome back, {user?.full_name?.split(' ')[0] || 'User'}. Here&apos;s your sales summary.
+        </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
