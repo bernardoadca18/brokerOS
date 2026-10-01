@@ -80,7 +80,13 @@ export function Header({ onMenuClick }: HeaderProps) {
       </Button>
 
       <div className="flex flex-1 items-center justify-end gap-2">
-        <Button variant="ghost" size="icon" aria-label="Notifications">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Notifications (coming soon)"
+          disabled
+          className="opacity-50 cursor-not-allowed"
+        >
           <Bell className="h-5 w-5" />
         </Button>
         <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">

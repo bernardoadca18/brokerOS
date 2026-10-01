@@ -1,4 +1,5 @@
-from typing import Annotated, Any, Callable, Coroutine
+from collections.abc import Callable, Coroutine
+from typing import Annotated, Any
 
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBearer

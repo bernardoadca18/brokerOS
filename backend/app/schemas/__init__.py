@@ -1,9 +1,9 @@
 from app.schemas.organization import OrganizationResponse
 from app.schemas.user import (
     UserCreate,
+    UserListResponse,
     UserResponse,
     UserUpdate,
-    UserListResponse,
 )
 
 __all__ = [

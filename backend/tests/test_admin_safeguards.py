@@ -182,6 +182,7 @@ class TestUserCreationValidation:
     async def test_can_create_user_with_same_email_in_different_org(
         self,
         client: AsyncClient,
+        test_admin: User,
         test_admin_org2: User,
         test_org_two,
     ):
@@ -197,19 +198,19 @@ class TestUserCreationValidation:
         )
         assert response.status_code == 200
 
-        # Try to create user with same email as test_admin (who is in org1)
+        # Create user with same email as test_admin (who is in org1)
         # This should work because it's a different org
-        # But we need a different email since test_admin_org2 already has that email
         response = await client.post(
             "/api/v1/users",
             json={
-                "full_name": "New User",
-                "email": "unique@test.com",
+                "full_name": "Same Email Different Org",
+                "email": test_admin.email,  # Same email as admin in org1
                 "password": "NewPassword123!",
                 "role": "sales",
             },
         )
         assert response.status_code == 201
+        assert response.json()["email"] == test_admin.email
 
     @pytest.mark.asyncio
     async def test_email_normalized_on_create(
@@ -239,3 +240,89 @@ class TestUserCreationValidation:
         )
         assert response.status_code == 200
         assert response.json()["email"] == "updated@test.com"
+
+
+class TestProductionConfiguration:
+    """Tests for production configuration validation."""
+
+    def test_production_with_default_secret_fails(self):
+        """Test that production environment with default secret raises error."""
+        import os
+        from importlib import reload
+
+        # Set production environment with default secret
+        original_env = os.environ.get("ENVIRONMENT")
+        original_secret = os.environ.get("SECRET_KEY")
+
+        os.environ["ENVIRONMENT"] = "production"
+        # Ensure SECRET_KEY is not set or is the default
+        if "SECRET_KEY" in os.environ:
+            del os.environ["SECRET_KEY"]
+
+        try:
+            # Clear the LRU cache and reload config
+            from app.core import config
+
+            config.get_settings.cache_clear()
+            reload(config)
+
+            # This should raise RuntimeError
+            with pytest.raises(RuntimeError) as exc_info:
+                config.get_settings()
+
+            assert "default development SECRET_KEY" in str(exc_info.value)
+        finally:
+            # Restore original environment
+            if original_env is not None:
+                os.environ["ENVIRONMENT"] = original_env
+            elif "ENVIRONMENT" in os.environ:
+                del os.environ["ENVIRONMENT"]
+
+            if original_secret is not None:
+                os.environ["SECRET_KEY"] = original_secret
+            elif "SECRET_KEY" in os.environ:
+                del os.environ["SECRET_KEY"]
+
+            # Clear cache and reload
+            from app.core import config
+
+            config.get_settings.cache_clear()
+            reload(config)
+
+    def test_production_with_custom_secret_succeeds(self):
+        """Test that production environment with custom secret works."""
+        import os
+        from importlib import reload
+
+        original_env = os.environ.get("ENVIRONMENT")
+        original_secret = os.environ.get("SECRET_KEY")
+
+        os.environ["ENVIRONMENT"] = "production"
+        os.environ["SECRET_KEY"] = "a-very-secure-production-secret-key-12345"
+
+        try:
+            from app.core import config
+
+            config.get_settings.cache_clear()
+            reload(config)
+
+            # This should not raise
+            settings = config.get_settings()
+            assert settings.is_production
+        finally:
+            # Restore original environment
+            if original_env is not None:
+                os.environ["ENVIRONMENT"] = original_env
+            elif "ENVIRONMENT" in os.environ:
+                del os.environ["ENVIRONMENT"]
+
+            if original_secret is not None:
+                os.environ["SECRET_KEY"] = original_secret
+            elif "SECRET_KEY" in os.environ:
+                del os.environ["SECRET_KEY"]
+
+            # Clear cache and reload
+            from app.core import config
+
+            config.get_settings.cache_clear()
+            reload(config)

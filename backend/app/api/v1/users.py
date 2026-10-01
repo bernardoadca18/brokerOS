@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.dependencies import AdminUser, ManagerUser, require_role
-from app.core.security import get_password_hash, verify_password
+from app.core.dependencies import AdminUser, ManagerUser
+from app.core.security import get_password_hash
 from app.db.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserListResponse, UserResponse, UserUpdate
@@ -157,7 +157,7 @@ async def update_user(
             select(func.count()).where(
                 User.organization_id == current_user.organization_id,
                 User.role == "admin",
-                User.is_active == True,
+                User.is_active.is_(True),
                 User.id != user_id,
             )
         )
@@ -178,7 +178,7 @@ async def update_user(
             select(func.count()).where(
                 User.organization_id == current_user.organization_id,
                 User.role == "admin",
-                User.is_active == True,
+                User.is_active.is_(True),
                 User.id != user_id,
             )
         )

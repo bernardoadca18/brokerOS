@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from jose import JWTError, jwt
@@ -27,10 +27,10 @@ def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = 
     """Create a JWT access token."""
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = datetime.now(UTC) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
-    to_encode.update({"exp": expire, "iat": datetime.now(timezone.utc)})
+        expire = datetime.now(UTC) + timedelta(minutes=settings.access_token_expire_minutes)
+    to_encode.update({"exp": expire, "iat": datetime.now(UTC)})
     encoded_jwt: str = jwt.encode(to_encode, settings.secret_key, algorithm="HS256")
     return encoded_jwt
 

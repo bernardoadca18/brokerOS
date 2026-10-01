@@ -6,8 +6,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
-from app.core.dependencies import CurrentUser, get_current_user_from_cookie
-from app.core.security import create_access_token, get_password_hash, verify_password
+from app.core.dependencies import CurrentUser
+from app.core.security import create_access_token, verify_password
 from app.db.database import get_db
 from app.models.organization import Organization
 from app.models.user import User
@@ -105,7 +105,7 @@ async def login(
 async def logout(response: Response) -> dict[str, str]:
     """Clear session cookie."""
     response.delete_cookie(key="session", path="/")
-    return {"message": "Logged out successfully"}
+    return {"message": "Logout successful"}
 
 
 @router.get("/me", response_model=UserWithOrganizationResponse)

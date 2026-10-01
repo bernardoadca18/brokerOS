@@ -112,7 +112,7 @@ class TestTenantIsolation:
         )
         assert response.status_code == 401
         # Error message should not reveal if email exists
-        assert "Invalid credentials" in response.json()["detail"].lower()
+        assert "invalid credentials" in response.json()["detail"].lower()
 
     @pytest.mark.asyncio
     async def test_organization_endpoint_returns_own_org_only(

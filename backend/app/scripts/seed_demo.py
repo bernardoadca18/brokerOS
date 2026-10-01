@@ -3,7 +3,6 @@
 import asyncio
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import get_password_hash
 from app.db.database import async_session_maker
@@ -78,7 +77,8 @@ async def seed_demo() -> None:
                 session.add(new_user)
                 await session.flush()
                 print(
-                    f"Created user: {user_data['full_name']} ({user_data['role']}) - {user_data['email']}"
+                    f"Created user: {user_data['full_name']} "
+                    f"({user_data['role']}) - {user_data['email']}"
                 )
             else:
                 print(f"User already exists: {existing_user.full_name} ({existing_user.email})")

@@ -1,0 +1,79 @@
+STDOUT:
+============================= test session starts =============================
+platform win32 -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0 -- C:\workspaces\brokerOS\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\workspaces\brokerOS\backend
+configfile: pyproject.toml
+plugins: anyio-4.15.1, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 54 items
+
+tests/test_admin_safeguards.py::TestAdminSelfProtection::test_admin_cannot_deactivate_self PASSED [  1%]
+tests/test_admin_safeguards.py::TestAdminSelfProtection::test_admin_cannot_remove_own_admin_role PASSED [  3%]
+tests/test_admin_safeguards.py::TestAdminSelfProtection::test_admin_can_update_own_name PASSED [  5%]
+tests/test_admin_safeguards.py::TestAdminSelfProtection::test_admin_can_update_own_email PASSED [  7%]
+tests/test_admin_safeguards.py::TestLastAdminProtection::test_cannot_deactivate_last_admin PASSED [  9%]
+tests/test_admin_safeguards.py::TestLastAdminProtection::test_cannot_change_role_of_last_admin PASSED [ 11%]
+tests/test_admin_safeguards.py::TestLastAdminProtection::test_can_deactivate_admin_if_another_exists PASSED [ 12%]
+tests/test_admin_safeguards.py::TestLastAdminProtection::test_cannot_deactivate_admin_leaving_no_active_admins PASSED [ 14%]
+tests/test_admin_safeguards.py::TestUserCreationValidation::test_cannot_create_user_with_duplicate_email_in_org PASSED [ 16%]
+tests/test_admin_safeguards.py::TestUserCreationValidation::test_can_create_user_with_same_email_in_different_org PASSED [ 18%]
+tests/test_admin_safeguards.py::TestUserCreationValidation::test_email_normalized_on_create PASSED [ 20%]
+tests/test_admin_safeguards.py::TestUserCreationValidation::test_email_normalized_on_update PASSED [ 22%]
+tests/test_admin_safeguards.py::TestProductionConfiguration::test_production_with_default_secret_fails PASSED [ 24%]
+tests/test_admin_safeguards.py::TestProductionConfiguration::test_production_with_custom_secret_succeeds PASSED [ 25%]
+tests/test_auth.py::TestLogin::test_login_success PASSED                 [ 27%]
+tests/test_auth.py::TestLogin::test_login_wrong_password PASSED          [ 29%]
+tests/test_auth.py::TestLogin::test_login_wrong_email PASSED             [ 31%]
+tests/test_auth.py::TestLogin::test_login_wrong_organization PASSED      [ 33%]
+tests/test_auth.py::TestLogin::test_login_inactive_user PASSED           [ 35%]
+tests/test_auth.py::TestLogin::test_login_case_insensitive_email PASSED  [ 37%]
+tests/test_auth.py::TestLogin::test_login_inactive_organization PASSED   [ 38%]
+tests/test_auth.py::TestLogin::test_login_error_messages_generic PASSED  [ 40%]
+tests/test_auth.py::TestLogout::test_logout_success PASSED               [ 42%]
+tests/test_auth.py::TestLogout::test_logout_without_auth PASSED          [ 44%]
+tests/test_auth.py::TestMeEndpoint::test_me_authenticated PASSED         [ 46%]
+tests/test_auth.py::TestMeEndpoint::test_me_unauthenticated PASSED       [ 48%]
+tests/test_auth.py::TestPasswordSecurity::test_password_hashed PASSED    [ 50%]
+tests/test_auth.py::TestPasswordSecurity::test_same_password_different_hashes PASSED [ 51%]
+tests/test_auth.py::TestPasswordSecurity::test_password_verification PASSED [ 53%]
+tests/test_health.py::test_health_endpoint PASSED                        [ 55%]
+tests/test_rbac.py::TestAdminRole::test_admin_can_list_users PASSED      [ 57%]
+tests/test_rbac.py::TestAdminRole::test_admin_can_create_user PASSED     [ 59%]
+tests/test_rbac.py::TestAdminRole::test_admin_can_update_user PASSED     [ 61%]
+tests/test_rbac.py::TestAdminRole::test_admin_can_deactivate_user PASSED [ 62%]
+tests/test_rbac.py::TestAdminRole::test_admin_can_change_user_role PASSED [ 64%]
+tests/test_rbac.py::TestAdminRole::test_admin_can_get_organization PASSED [ 66%]
+tests/test_rbac.py::TestManagerRole::test_manager_can_list_users PASSED  [ 68%]
+tests/test_rbac.py::TestManagerRole::test_manager_can_get_user PASSED    [ 70%]
+tests/test_rbac.py::TestManagerRole::test_manager_cannot_create_user PASSED [ 72%]
+tests/test_rbac.py::TestManagerRole::test_manager_cannot_update_user PASSED [ 74%]
+tests/test_rbac.py::TestManagerRole::test_manager_can_get_organization PASSED [ 75%]
+tests/test_rbac.py::TestSalesRole::test_sales_cannot_list_users PASSED   [ 77%]
+tests/test_rbac.py::TestSalesRole::test_sales_cannot_create_user PASSED  [ 79%]
+tests/test_rbac.py::TestSalesRole::test_sales_can_get_organization PASSED [ 81%]
+tests/test_rbac.py::TestUnauthenticatedAccess::test_unauthenticated_cannot_list_users PASSED [ 83%]
+tests/test_rbac.py::TestUnauthenticatedAccess::test_unauthenticated_cannot_create_user PASSED [ 85%]
+tests/test_rbac.py::TestUnauthenticatedAccess::test_unauthenticated_can_access_health PASSED [ 87%]
+tests/test_tenant_isolation.py::TestTenantIsolation::test_admin_cannot_see_users_from_other_org PASSED [ 88%]
+tests/test_tenant_isolation.py::TestTenantIsolation::test_admin_cannot_get_user_from_other_org PASSED [ 90%]
+tests/test_tenant_isolation.py::TestTenantIsolation::test_admin_cannot_update_user_from_other_org PASSED [ 92%]
+tests/test_tenant_isolation.py::TestTenantIsolation::test_admin_cannot_create_user_in_other_org PASSED [ 94%]
+tests/test_tenant_isolation.py::TestTenantIsolation::test_user_in_org1_cannot_login_to_org2 PASSED [ 96%]
+tests/test_tenant_isolation.py::TestTenantIsolation::test_cross_org_login_attempt_reveals_nothing PASSED [ 98%]
+tests/test_tenant_isolation.py::TestTenantIsolation::test_organization_endpoint_returns_own_org_only PASSED [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\workspaces\brokerOS\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+.venv\Lib\site-packages\passlib\handlers\argon2.py:716
+  C:\workspaces\brokerOS\backend\.venv\Lib\site-packages\passlib\handlers\argon2.py:716: DeprecationWarning: Accessing argon2.__version__ is deprecated and will be removed in a future release. Use importlib.metadata directly to query for argon2-cffi's packaging metadata.
+    _argon2_cffi.__version__, max_version)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 54 passed, 2 warnings in 6.16s ========================
+
+
+STDERR:

@@ -6,15 +6,56 @@ BrokerOS is a sales operations platform designed for companies that sell vehicle
 
 The system is built to support B2B sales teams in their daily operations, from initial lead capture through opportunity closure and ongoing customer relationship management.
 
+## Implemented Modules
+
+### Organizations (Phase 1)
+Multi-tenant support is fully implemented. Each organization has:
+- Isolated data with tenant-aware queries
+- Unique slug-based identification for login
+- Independent user management
+- Complete data isolation between tenants
+
+### Users (Phase 1)
+User management with role-based access control:
+- Three roles: admin, manager, sales
+- Password hashing with bcrypt
+- Email-based authentication
+- Organization-scoped user lists
+
+### Authentication (Phase 1)
+JWT-based authentication with HttpOnly session cookies:
+- Login via organization slug + email + password
+- Secure HttpOnly cookies for session management
+- Token refresh mechanism
+- Current user context injection
+
+## Message Queue Roadmap (Future)
+
+BrokerOS will eventually require a message broker for asynchronous processing. The roadmap includes:
+
+### Phase 2-3: RabbitMQ (Recommended for Initial Implementation)
+- **Use Cases**: Email notifications, report generation, background tasks
+- **Rationale**: Simpler operational model, well-suited for task queues
+- **Integration**: FastAPI with `aio-pika` library
+- **Deployment**: Single instance with optional clustering
+
+### Phase 4+: Kafka (For High-Scale Event Streaming)
+- **Use Cases**: Event sourcing, real-time analytics, audit logs, inter-service communication
+- **Rationale**: Higher throughput, event replay capabilities, better for microservices
+- **Integration**: `aiokafka` library with async consumers
+- **Deployment**: Multi-broker cluster with Zookeeper or KRaft mode
+
+### Migration Path
+1. Start with RabbitMQ for immediate async needs
+2. Introduce Kafka alongside RabbitMQ for event streaming
+3. Gradually migrate appropriate workloads to Kafka
+4. Maintain RabbitMQ for task queues, Kafka for events
+
+**Note**: No message broker implementation in Phase 1. This is documentation only for future planning.
+
 ## Planned Domain Modules
 
 The following modules are planned for future implementation phases:
-
-### Organizations
-Multi-tenant support allowing multiple companies to use the platform independently. Each organization will have isolated data, custom branding options, and independent user management.
-
-### Users
-User management with role-based access control. Users belong to organizations and have permissions based on their role (administrator, manager, sales representative, etc.).
 
 ### Leads
 Lead capture and qualification system. Includes lead sources, scoring, assignment rules, and qualification workflows to convert leads into opportunities.
@@ -104,28 +145,28 @@ This pattern allows:
 - Swapping providers without changing application code
 - Centralized error handling and retry logic
 
-## Future Multi-Tenancy
+## Multi-Tenancy Implementation
 
-Business entities will eventually include `organization_id` for tenant isolation:
+Multi-tenancy is fully implemented in Phase 1. All business entities include `organization_id` for tenant isolation:
 
 ```sql
-CREATE TABLE leads (
+CREATE TABLE users (
     id UUID PRIMARY KEY,
     organization_id UUID NOT NULL REFERENCES organizations(id),
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255),
-    phone VARCHAR(50),
-    status VARCHAR(50) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL DEFAULT 'sales',
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    UNIQUE(organization_id, email)
 );
-
--- Row-level security policies will enforce tenant isolation
-CREATE POLICY tenant_isolation ON leads
-    USING (organization_id = current_setting('app.current_organization')::UUID);
 ```
 
-**Note:** Multi-tenancy is documented but not implemented in Phase 0.
+Tenant isolation is enforced at the application layer through:
+- Organization-scoped database queries in all endpoints
+- Tenant-aware authentication requiring organization slug
+- Test suite verification of cross-tenant access prevention
 
 ## Technology Stack
 

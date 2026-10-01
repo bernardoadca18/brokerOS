@@ -3,12 +3,10 @@ Test configuration and fixtures for BrokerOS backend tests.
 """
 import asyncio
 import os
-from typing import AsyncGenerator
-from unittest.mock import AsyncMock, patch
+from collections.abc import AsyncGenerator
 
 import pytest
 import pytest_asyncio
-from fastapi.testclient import TestClient
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
@@ -17,7 +15,6 @@ os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
 os.environ["SECRET_KEY"] = "test-secret-key-for-testing-only"
 os.environ["ENVIRONMENT"] = "development"
 
-from app.core.config import get_settings
 from app.core.security import get_password_hash
 from app.db.database import Base, get_db
 from app.main import app
@@ -44,7 +41,6 @@ def event_loop():
 async def test_engine():
     """Create a test database engine."""
     # Import aiosqlite for SQLite support
-    import aiosqlite
 
     engine = create_async_engine(
         TEST_DATABASE_URL,
