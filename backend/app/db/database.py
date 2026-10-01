@@ -76,10 +76,6 @@ def get_session_maker() -> async_sessionmaker[AsyncSession]:
     return _session_maker
 
 
-# Alias for backwards compatibility with existing imports
-async_session_maker = get_session_maker()
-
-
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with get_session_maker()() as session:
         yield session

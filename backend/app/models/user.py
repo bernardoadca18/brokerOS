@@ -9,6 +9,15 @@ from app.db.database import GUID, Base
 
 if TYPE_CHECKING:
     from app.models.organization import Organization
+    from app.models.lead import Lead
+    from app.models.customer import Customer
+    from app.models.opportunity import Opportunity
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.db.database import GUID, Base
+
+if TYPE_CHECKING:
+    from app.models.organization import Organization
 
 RoleType = Literal["admin", "manager", "sales"]
 
@@ -41,3 +50,8 @@ class User(Base):
     )
 
     organization: Mapped["Organization"] = relationship("Organization", back_populates="users")
+
+    # CRM entity relationships
+    owned_leads: Mapped[list["Lead"]] = relationship("Lead", back_populates="owner")
+    owned_customers: Mapped[list["Customer"]] = relationship("Customer", back_populates="owner")
+    owned_opportunities: Mapped[list["Opportunity"]] = relationship("Opportunity", back_populates="owner")

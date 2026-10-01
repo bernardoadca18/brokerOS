@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { AppShell } from '@/components/layout'
 
@@ -12,7 +12,6 @@ export default function AppLayout({
 }) {
   const { isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
-  const pathname = usePathname()
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {

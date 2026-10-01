@@ -6,17 +6,24 @@ BrokerOS is a professional B2B sales operations platform designed for companies 
 
 ## Current Development Phase
 
+**Phase 2 - Core CRM (In Progress)**
+
+Phase 2 implements the core CRM functionality:
+- Lead capture, qualification, and conversion
+- Customer database management
+- Opportunity pipeline tracking
+- Record ownership and RBAC enforcement
+- Lead-to-Customer-to-Opportunity conversion workflow
+
 **Phase 1 - Complete ✅**
 
-Phase 1 establishes the authentication and multi-tenant foundation:
+Phase 1 established the authentication and multi-tenant foundation:
 - Multi-tenant organization support with data isolation
 - User management with role-based access control (admin, manager, sales)
 - JWT authentication with HttpOnly session cookies
-- Secure password hashing with bcrypt
+- Secure password hashing with Argon2
 - Complete test suite with tenant isolation verification
 - Database-agnostic UUID support (PostgreSQL and SQLite)
-
-Business modules (CRM, leads, pipeline, etc.) will be implemented in Phase 2+.
 
 ## Architecture Overview
 
@@ -214,49 +221,56 @@ alembic upgrade head
 
 ## Current Limitations
 
-Phase 0 is intentionally limited to foundation work:
+Phase 2 provides core CRM functionality. The following are not yet implemented:
 
-- ❌ No authentication or authorization
-- ❌ No business modules implemented
-- ❌ No database schema beyond health check
-- ❌ No real data or integrations
-- ❌ No production deployment configuration
-- ❌ No comprehensive test suite
-- ❌ No background job processing
+- ❌ Task management and activity logging
+- ❌ Advanced analytics and reporting
+- ❌ WhatsApp/Email integrations
+- ❌ Document processing
+- ❌ External insurance APIs
+- ❌ Background job processing (RabbitMQ)
+- ❌ Event streaming (Kafka)
 
 These will be addressed in future phases.
 
 ## Roadmap
 
-### Phase 1: Authentication & Users
+### Phase 1: Authentication & Users ✅
 - User registration and login
 - Organization management
 - Role-based access control
 - Basic user profiles
 
-### Phase 2: Core CRM
+### Phase 2: Core CRM (Current)
 - Lead capture and qualification
 - Customer database
 - Opportunity management
+- Lead conversion workflow
 - Basic pipeline view
 
-### Phase 3: Task Management
+### Phase 3: Pipeline, Tasks & Activity
 - Task creation and assignment
 - Follow-up tracking
 - Activity logging
 - Calendar integration
 
-### Phase 4: Analytics & Reporting
+### Phase 4: Analytics & Operational Polish
 - Sales dashboards
 - Conversion metrics
 - Team performance
 - Custom reports
 
-### Phase 5: Integrations
+### Phase 5: Integrations & Async Processing
+- RabbitMQ for async jobs
 - WhatsApp Business API
 - Email integration
 - Document processing
 - External insurance APIs
+
+### Phase 6: Event Streaming & Projections
+- Kafka for durable domain events
+- Event replay capabilities
+- Analytics projections
 
 ## Contributing
 

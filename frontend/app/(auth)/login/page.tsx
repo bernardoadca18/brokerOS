@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import { ApiClientError } from '@/lib/api'
 import { Button } from '@/components/ui/button'
@@ -13,7 +12,6 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const { login, isAuthenticated, isLoading: authLoading } = useAuth()
-  const router = useRouter()
 
   // Show loading while checking authentication status
   if (authLoading) {

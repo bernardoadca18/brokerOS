@@ -5,7 +5,7 @@ import asyncio
 from sqlalchemy import select
 
 from app.core.security import get_password_hash
-from app.db.database import async_session_maker
+from app.db.database import get_session_maker
 from app.models.organization import Organization
 from app.models.user import User
 
@@ -34,7 +34,7 @@ DEMO_USERS = [
 
 async def seed_demo() -> None:
     """Create demo organization and users if they don't exist."""
-    async with async_session_maker() as session:
+    async with get_session_maker()() as session:
         # Check if demo organization exists
         result = await session.execute(
             select(Organization).where(Organization.slug == DEMO_ORG_SLUG)

@@ -18,7 +18,7 @@ Multi-tenant support is fully implemented. Each organization has:
 ### Users (Phase 1)
 User management with role-based access control:
 - Three roles: admin, manager, sales
-- Password hashing with bcrypt
+- Password hashing with Argon2
 - Email-based authentication
 - Organization-scoped user lists
 
@@ -26,45 +26,67 @@ User management with role-based access control:
 JWT-based authentication with HttpOnly session cookies:
 - Login via organization slug + email + password
 - Secure HttpOnly cookies for session management
-- Token refresh mechanism
 - Current user context injection
 
 ## Message Queue Roadmap (Future)
 
 BrokerOS will eventually require a message broker for asynchronous processing. The roadmap includes:
 
-### Phase 2-3: RabbitMQ (Recommended for Initial Implementation)
-- **Use Cases**: Email notifications, report generation, background tasks
+### Future: RabbitMQ (Async Jobs & Commands)
+- **Use Cases**: Background tasks, email notifications, report generation, integration workers
 - **Rationale**: Simpler operational model, well-suited for task queues
 - **Integration**: FastAPI with `aio-pika` library
 - **Deployment**: Single instance with optional clustering
 
-### Phase 4+: Kafka (For High-Scale Event Streaming)
-- **Use Cases**: Event sourcing, real-time analytics, audit logs, inter-service communication
-- **Rationale**: Higher throughput, event replay capabilities, better for microservices
+### Future: Kafka (Durable Domain Events & Projections)
+- **Use Cases**: Event sourcing, durable domain events, projections, analytics, event replay, audit logs
+- **Rationale**: Higher throughput, event replay capabilities, durable event log
 - **Integration**: `aiokafka` library with async consumers
 - **Deployment**: Multi-broker cluster with Zookeeper or KRaft mode
 
-### Migration Path
-1. Start with RabbitMQ for immediate async needs
-2. Introduce Kafka alongside RabbitMQ for event streaming
-3. Gradually migrate appropriate workloads to Kafka
-4. Maintain RabbitMQ for task queues, Kafka for events
+**Note**: Neither RabbitMQ nor Kafka are implemented in Phase 2. These are documented for future roadmap planning only.
 
-**Note**: No message broker implementation in Phase 1. This is documentation only for future planning.
-
-## Planned Domain Modules
-
-The following modules are planned for future implementation phases:
+## Phase 2: Core CRM (Current)
 
 ### Leads
-Lead capture and qualification system. Includes lead sources, scoring, assignment rules, and qualification workflows to convert leads into opportunities.
+Lead capture and qualification system with:
+- Lead sources: manual, website, referral, whatsapp, campaign, other
+- Product interests: vehicle_insurance, consortium
+- Status tracking: new, contacted, qualified, unqualified, converted
+- Lead conversion workflow to Customer + Opportunity
 
 ### Customers
-Customer database with complete profiles, policy information, interaction history, and renewal tracking. Supports both individual and corporate customers.
+Customer database supporting:
+- Individual and company customer types
+- Contact information (email, phone)
+- Ownership assignment to sales users
+- Relationship to Opportunities
 
 ### Opportunities
-Sales pipeline management with customizable stages. Tracks opportunities from initial qualification through negotiation to closure, with probability estimates and expected values.
+Sales pipeline management with:
+- Stages: qualification, proposal, negotiation, won, lost
+- Product types: vehicle_insurance, consortium
+- Amount tracking and expected close dates
+- Lost reason tracking
+- Customer relationship
+
+### Lead Conversion
+Transactional workflow that atomically:
+- Creates a Customer from Lead information
+- Creates an Opportunity linked to the Customer
+- Marks the Lead as converted
+- Prevents duplicate conversion
+
+### Record Ownership
+All CRM entities (Lead, Customer, Opportunity) support:
+- Ownership assignment to users within the same organization
+- RBAC-based visibility (Sales see only their own records)
+- Admin/Manager can view and manage all organization records
+- Sales users automatically own records they create
+
+## Planned Future Modules
+
+The following modules are planned for future implementation phases:
 
 ### Tasks
 Task and follow-up management integrated with leads, opportunities, and customers. Supports due dates, priorities, assignments, and completion tracking.
